@@ -12,7 +12,7 @@ population_size = col1.slider("居住容量", 500, 2500, 1000)
 empty_ratio = col1.slider("空き地割合", 0.2, 0.9, 0.3)
 similarity_threshold = col1.slider("閾値", 0.0, 1.0, 0.4)
 
-see_range = col2.slider("view range (何マスまでを隣人とするか)", 1, 10, 3)
+see_range = col2.slider("view range (何マスまでを隣人とするか)", min_value=1, max_value=10, value=1)
 n_move = col2.number_input(
     "num move (移動住民数/iter)", value=100, max_value=500, min_value=10
 )
