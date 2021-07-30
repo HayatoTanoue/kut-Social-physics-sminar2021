@@ -5,16 +5,16 @@ from shelling import Schelling
 
 # Streamlit App
 
-st.title("Schelling's Model simulation")
+st.title("Schelling Model simulation")
 
 col1, col2 = st.beta_columns(2)
 population_size = col1.slider("居住容量", 500, 2500, 1000)
-empty_ratio = col1.slider("空き地割合", 0.0, 1.0, 0.3)
+empty_ratio = col1.slider("空き地割合", 0.2, 0.9, 0.3)
 similarity_threshold = col1.slider("閾値", 0.0, 1.0, 0.4)
 
-see_range = col2.slider("view range", 1, 10, 3)
-n_move = col2.number_input("num move (移動住民数/iter)", 100)
-n_iterations = col2.number_input("Number of Iterations", 10)
+see_range = col2.slider("view range (何マスまでを隣人とするか)", 1, 10, 3)
+n_move = col2.number_input("num move (移動住民数/iter)", 100, max_value=500, min_value=10)
+n_iterations = col2.number_input("Number of Iterations", 10, min_value=2)
 
 schelling = Schelling(
     population_size, empty_ratio, similarity_threshold, see_range, 0.002
