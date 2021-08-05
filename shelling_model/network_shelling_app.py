@@ -4,13 +4,17 @@ import streamlit as st
 from network_shelling import Network_Schelling
 
 
-def draw(G, pos, ax):
+def draw(G, pos, ax, nodesize=False):
     num_to_color = {0: "w", 1: "springgreen", -1: "yellow"}
+    if nodesize:
+        nodesize = [G.degree(i) * 25 for i in range(nx.number_of_nodes(G))]
+    else:
+        nodesize = None
 
     nx.draw_networkx_nodes(
         G,
         pos,
-        node_size=[G.degree(i) * 25 for i in range(nx.number_of_nodes(G))],
+        node_size=nodesize,
         node_color=[
             num_to_color[G.nodes[i]["kind"]] for i in range(nx.number_of_nodes(G))
         ],
@@ -27,7 +31,7 @@ def app():
 
     col1, col2 = st.beta_columns(2)
     num_nodes = col1.slider("number of nodes", 100, 500, 100)
-    empty_ratio = col1.slider("空き地割合", 0.2, 0.9, 0.3)
+    empty_ratio = col1.slider("空き地割合", 0.1, 0.5, 0.2)
     similarity_threshold = col1.slider("閾値", 0.0, 1.0, 0.4)
 
     k = col1.slider("反発係数", min_value=0.1, max_value=2.0, value=0.15)
@@ -39,6 +43,8 @@ def app():
     )
     n_iterations = col2.number_input("Number of Iterations", value=10, min_value=2)
 
+    node_deg = col2.radio("node size", [True, False], index=1)
+
     schelling = Network_Schelling(
         num_nodes, parameter, empty_ratio, similarity_threshold, 0.002
     )
@@ -48,11 +54,11 @@ def app():
 
     # Plot the graphs at initial stage
     plt.style.use("ggplot")
-    fig, axes = plt.subplots(1, 2, figsize=(8, 4))
+    fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
     # Left hand side graph with Schelling simulation plot
     pos = nx.spring_layout(schelling.G, k=k)
-    draw(schelling.G, pos, axes[0])
+    draw(schelling.G, pos, axes[0], node_deg)
 
     # Right hand side graph with Mean Similarity Ratio graph
     axes[1].set_xlabel("Iterations")
@@ -76,10 +82,10 @@ def app():
             schelling.run(n_move)
             mean_similarity_ratio.append(schelling.get_mean_similarity_ratio())
 
-            fig, axes = plt.subplots(1, 2, figsize=(8, 4))
+            fig, axes = plt.subplots(1, 2, figsize=(12, 6))
 
             # Left hand side graph with Schelling simulation plot
-            draw(schelling.G, pos, axes[0])
+            draw(schelling.G, pos, axes[0], node_deg)
 
             # Right hand side graph with Mean Similarity Ratio graph
             axes[1].set_xlabel("Iterations")
