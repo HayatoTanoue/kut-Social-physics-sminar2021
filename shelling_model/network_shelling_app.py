@@ -27,7 +27,7 @@ def draw(G, pos, ax, nodesize=False):
 
 
 def app():
-    st.title("network shelling model simulation")
+    st.title("network schelling model simulation")
 
     col1, col2 = st.beta_columns(2)
     num_nodes = col1.slider("number of nodes", 100, 500, 100)
